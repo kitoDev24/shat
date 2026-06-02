@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shat Language Dataset Editor</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #c9d1d9; display: flex; height: 100vh; }
+.sidebar { width: 260px; background: #161b22; border-right: 1px solid #30363d; display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
+.sidebar h1 { font-size: 18px; padding: 20px; border-bottom: 1px solid #30363d; color: #58a6ff; letter-spacing: 1px; }
+.sidebar nav { padding: 12px 0; flex: 1; }
+.nav-btn { display: block; width: 100%; padding: 12px 20px; background: none; border: none; color: #8b949e; text-align: left; font-size: 14px; cursor: pointer; border-left: 3px solid transparent; transition: all .15s; }
+.nav-btn:hover { background: #1c2128; color: #c9d1d9; }
+.nav-btn.active { border-left-color: #58a6ff; color: #58a6ff; background: #1c2128; }
+.nav-btn .icon { margin-right: 10px; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.toolbar { padding: 14px 24px; border-bottom: 1px solid #30363d; background: #161b22; display: flex; align-items: center; gap: 12px; }
+.toolbar h2 { font-size: 16px; font-weight: 600; color: #f0f6fc; }
+.toolbar .status { font-size: 12px; color: #8b949e; margin-left: auto; }
+.content { flex: 1; overflow-y: auto; padding: 24px; }
+.btn { padding: 8px 20px; border: 1px solid #30363d; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all .15s; }
+.btn-primary { background: #238636; color: #fff; border-color: #238636; }
+.btn-primary:hover { background: #2ea043; }
+.btn-danger { background: #da3633; color: #fff; border-color: #da3633; }
+.btn-danger:hover { background: #f85149; }
+.btn-secondary { background: #21262d; color: #c9d1d9; border-color: #30363d; }
+.btn-secondary:hover { background: #30363d; }
+.card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.card-title { font-size: 14px; font-weight: 600; color: #f0f6fc; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 13px; color: #8b949e; margin-bottom: 6px; }
+.form-input { width: 100%; padding: 10px 12px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 14px; }
+.form-input:focus { outline: none; border-color: #58a6ff; }
+.editor-area { width: 100%; min-height: 400px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 13px; line-height: 1.6; padding: 0; resize: vertical; display: flex; }
+.line-numbers { padding: 10px 0; background: #161b22; border-right: 1px solid #30363d; min-width: 48px; text-align: right; color: #484f58; font-size: 13px; line-height: 1.6; user-select: none; overflow: hidden; }
+.line-numbers span { display: block; padding: 0 10px; }
+.editor-textarea { flex: 1; padding: 10px 14px; background: transparent; border: none; color: #c9d1d9; font-family: inherit; font-size: 13px; line-height: 1.6; resize: none; min-height: 400px; outline: none; tab-size: 2; }
+.pa-list { display: grid; gap: 8px; }
+.pa-item { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; overflow: hidden; }
+.pa-prompt { padding: 12px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 500; transition: background .15s; }
+.pa-prompt:hover { background: #1c2128; }
+.pa-prompt .arrow { transition: transform .2s; font-size: 12px; }
+.pa-prompt.open .arrow { transform: rotate(90deg); }
+.pa-answer { padding: 0 16px; max-height: 0; overflow: hidden; transition: all .3s ease; }
+.pa-answer.open { padding: 12px 16px; max-height: 200px; border-top: 1px solid #30363d; }
+.pa-answer .label { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.pa-answer .text { color: #7ee787; }
+.story-preview { position: relative; }
+.story-preview p { line-height: 1.7; margin-bottom: 8px; font-size: 14px; }
+.story-preview .fade-overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(transparent, #0d1117); pointer-events: none; transition: opacity .3s; }
+.story-preview.expanded .fade-overlay { opacity: 0; }
+.toggle-story { margin-top: 8px; }
+.trans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.trans-card { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; overflow: hidden; position: relative; }
+.trans-word { padding: 14px; text-align: center; font-weight: 600; font-size: 15px; color: #58a6ff; border-bottom: 1px solid #30363d; background: #161b22; }
+.trans-meaning { padding: 14px; text-align: center; font-size: 14px; color: #7ee787; position: relative; }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.7); z-index: 100; justify-content: center; align-items: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 24px; width: 90%; max-width: 500px; }
+.modal h3 { margin-bottom: 16px; }
+.modal-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+.view { display: none; }
+.view.active { display: block; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+.status-saved { color: #7ee787; }
+.status-unsaved { color: #d29922; }
+.delete-btn { background: none; border: none; color: #da3633; cursor: pointer; font-size: 16px; padding: 4px 8px; border-radius: 4px; }
+.delete-btn:hover { background: #da363322; }
+
+/* Translator */
+.translator-container { display: flex; gap: 16px; }
+.translator-panel { flex: 1; }
+.translator-panel textarea { width: 100%; min-height: 200px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-size: 14px; padding: 12px; resize: vertical; font-family: inherit; line-height: 1.6; }
+.translator-panel textarea:focus { outline: none; border-color: #58a6ff; }
+.trans-output { width: 100%; min-height: 200px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #7ee787; font-size: 14px; padding: 12px; line-height: 1.6; white-space: pre-wrap; overflow-y: auto; }
+
+/* Missing words */
+.missing-words { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.missing-tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: #21262d; border: 1px solid #da3633; border-radius: 12px; color: #f85149; font-size: 12px; cursor: pointer; transition: all .15s; }
+.missing-tag:hover { background: #da363322; border-color: #f85149; }
+.missing-tag .add-icon { font-weight: bold; font-size: 14px; }
+.translated-word { color: #7ee787; }
+.untranslated-word { color: #f85149; text-decoration: underline; text-decoration-style: wavy; cursor: help; }
+
+/* Rules */
+.rule-section { margin-bottom: 20px; }
+.rule-section h3 { color: #58a6ff; margin-bottom: 8px; font-size: 15px; }
+.rule-section p { line-height: 1.7; margin-bottom: 6px; font-size: 14px; }
+.rule-section code { background: #21262d; padding: 2px 6px; border-radius: 3px; color: #f0f6fc; font-size: 13px; }
+.rule-section .example { background: #0d1117; border-left: 3px solid #238636; padding: 8px 12px; margin: 6px 0; border-radius: 0 6px 6px 0; font-size: 13px; }
+.rule-section .example .en { color: #8b949e; }
+.rule-section .example .sh { color: #7ee787; }
+.rule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; margin: 8px 0; }
+.rule-grid .item { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 13px; }
+.rule-grid .item .en { color: #8b949e; }
+.rule-grid .item .sh { color: #58a6ff; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h1>&#9674; Shat Editor</h1>
+  <nav>
+    <button class="nav-btn active" data-view="translator" onclick="switchView('translator')">
+      <span class="icon">&#8644;</span> Translator
+    </button>
+    <button class="nav-btn" data-view="view-pa" onclick="switchView('view-pa')">
+      <span class="icon">&#9635;</span> Prompts &amp; Answers
+    </button>
+    <button class="nav-btn" data-view="view-story" onclick="switchView('view-story')">
+      <span class="icon">&#9640;</span> Show Story
+    </button>
+    <button class="nav-btn" data-view="view-trans" onclick="switchView('view-trans')">
+      <span class="icon">&#9674;</span> Dictionary
+    </button>
+    <button class="nav-btn" data-view="add-trans" onclick="switchView('add-trans')">
+      <span class="icon">+</span> Add Translation
+    </button>
+    <button class="nav-btn" data-view="edit-trans" onclick="switchView('edit-trans')">
+      <span class="icon">&#9998;</span> Edit Translations
+    </button>
+    <button class="nav-btn" data-view="add-pa" onclick="switchView('add-pa')">
+      <span class="icon">+</span> Add Prompt/Answer
+    </button>
+    <button class="nav-btn" data-view="edit-story" onclick="switchView('edit-story')">
+      <span class="icon">&#9998;</span> Edit Story
+    </button>
+    <button class="nav-btn" data-view="rules" onclick="switchView('rules')">
+      <span class="icon">&#9881;</span> Shat Rules
+    </button>
+  </nav>
+  <div style="padding:12px 20px; border-top:1px solid #30363d; font-size:11px; color:#484f58;">
+    Shat Language Dataset v1.0
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ===== TRANSLATOR ===== -->
+  <div id="translator" class="content view active">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>&#8644; English &#8594; Shat Translator</h2>
+      <span class="status" id="translator-status">Type to translate</span>
+    </div>
+    <div class="translator-container">
+      <div class="translator-panel">
+        <div class="card">
+          <div class="card-header"><span class="card-title">English</span></div>
+          <textarea id="en-input" placeholder="Type English here..." oninput="translateText()"></textarea>
+        </div>
+      </div>
+      <div class="translator-panel">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Shat</span></div>
+          <div class="trans-output" id="shat-output"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Missing Words <span id="missing-count" style="color:#f85149;font-size:12px;">(0)</span></span>
+        <span style="font-size:12px;color:#8b949e;">Click a word to add its translation</span>
+      </div>
+      <div id="missing-words" class="missing-words"></div>
+    </div>
+  </div>
+
+  <!-- ===== SHOW PROMPTS & ANSWERS ===== -->
+  <div id="view-pa" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>&#9635; Prompts &amp; Answers</h2>
+      <span class="status" id="pa-count">0 pairs</span>
+    </div>
+    <div id="pa-list" class="pa-list"></div>
+  </div>
+
+  <!-- ===== SHOW STORY ===== -->
+  <div id="view-story" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>&#9640; Story: The Language of Shat</h2>
+      <button class="btn btn-secondary" id="story-toggle-btn" onclick="toggleStoryPreview()">&#9660; Expand</button>
+    </div>
+    <div class="card">
+      <div class="story-preview" id="story-preview">
+        <div id="story-content"></div>
+        <div class="fade-overlay" id="story-fade"></div>
+      </div>
+      <button class="btn btn-secondary toggle-story" id="story-toggle-btn2" onclick="toggleStoryPreview()">&#9660; Show full story</button>
+    </div>
+  </div>
+
+  <!-- ===== DICTIONARY ===== -->
+  <div id="view-trans" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>&#9674; Shat Dictionary</h2>
+      <span class="status" id="trans-count">0 entries</span>
+    </div>
+    <input class="form-input" id="dict-search" placeholder="Search by English or Shat..." oninput="renderTransGrid()" style="margin-bottom:16px;">
+    <div id="trans-grid" class="trans-grid"></div>
+  </div>
+
+  <!-- ===== ADD PROMPT/ANSWER ===== -->
+  <div id="add-pa" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>+ New Prompt &amp; Answer</h2>
+    </div>
+    <div class="card">
+      <div class="form-group">
+        <label>Prompt (question in English)</label>
+        <input class="form-input" id="new-prompt" placeholder="e.g. How do you say 'friend' in Shat?" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Answer (in Shat language)</label>
+        <input class="form-input" id="new-answer" placeholder="e.g. The word for friend is 'Rakan'" autocomplete="off">
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-primary" onclick="addPromptAnswer()">Save to JSON</button>
+        <span id="add-status" style="margin-left:12px; font-size:13px; line-height:36px; color:#8b949e;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ADD TRANSLATION ===== -->
+  <div id="add-trans" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>+ New Translation</h2>
+    </div>
+    <div class="card">
+      <div class="form-group">
+        <label>English word / phrase</label>
+        <input class="form-input" id="new-trans-word" placeholder="e.g. friend" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Shat translation</label>
+        <input class="form-input" id="new-trans-meaning" placeholder="e.g. rakan" autocomplete="off">
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-primary" onclick="addTranslation()">Save to JSON</button>
+        <span id="add-trans-status" style="margin-left:12px; font-size:13px; line-height:36px; color:#8b949e;"></span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">Existing translations</span></div>
+      <div id="add-trans-existing"></div>
+    </div>
+  </div>
+
+  <!-- ===== EDIT STORY ===== -->
+  <div id="edit-story" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>&#9998; Edit Story</h2>
+      <span class="status" id="story-status">Loaded</span>
+    </div>
+    <div class="card">
+      <div class="editor-area">
+        <div class="line-numbers" id="line-numbers"></div>
+        <textarea class="editor-textarea" id="story-editor" spellcheck="false" oninput="updateLineNumbers()" onscroll="syncScroll()"></textarea>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button class="btn btn-primary" onclick="saveStory()">&#128190; Save Story</button>
+        <span id="story-save-status" style="margin-left:12px; font-size:13px; line-height:36px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== EDIT TRANSLATIONS ===== -->
+  <div id="edit-trans" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>&#9998; Edit Translations</h2>
+      <span class="status" id="trans-status">Loaded</span>
+    </div>
+    <input class="form-input" id="edit-trans-search" placeholder="Search by English or Shat..." oninput="renderTransEditor()" style="margin-bottom:16px;">
+    <div class="card" id="edit-trans-list"></div>
+  </div>
+
+  <!-- ===== RULES ===== -->
+  <div id="rules" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>&#9881; Shat Language Rules</h2>
+    </div>
+    <div class="card">
+      <div class="rule-section">
+        <h3>1. Word Order</h3>
+        <p>Shat follows <b>Subject-Verb-Object</b> (SVO) order, like English.</p>
+        <div class="example">
+          <div class="en">&#9654; <i>Ane</i> (I) <i>vakar</i> (think) <i>7oulm</i> (a dream)</div>
+          <div class="sh">&#8594; "I think a dream"</div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>2. Pronouns</h3>
+        <div class="rule-grid">
+          <div class="item"><span class="en">I</span><span class="sh">ane</span></div>
+          <div class="item"><span class="en">you</span><span class="sh">nte</span></div>
+          <div class="item"><span class="en">he</span><span class="sh">howe</span></div>
+          <div class="item"><span class="en">she</span><span class="sh">hiye</span></div>
+          <div class="item"><span class="en">we</span><span class="sh">n7ne</span></div>
+          <div class="item"><span class="en">they</span><span class="sh">houme</span></div>
+          <div class="item"><span class="en">me</span><span class="sh">2ane</span></div>
+          <div class="item"><span class="en">my</span><span class="sh">li / -i</span></div>
+          <div class="item"><span class="en">your</span><span class="sh">lak</span></div>
+          <div class="item"><span class="en">our</span><span class="sh">lne</span></div>
+          <div class="item"><span class="en">their</span><span class="sh">lhoum</span></div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>3. Possession</h3>
+        <p>Possession uses <code>li</code> (my) before the noun, or the suffix <code>-i</code> attached to the noun.</p>
+        <div class="example">
+          <div class="en">&#9654; <i>wald</i> (father) + <i>-i</i> = <b>waldi</b> (my father)</div>
+          <div class="en">&#9654; <i>dar</i> (house) + <i>li</i> = <b>dar li</b> (my house)</div>
+          <div class="sh">&#8594; "waldi" or "dar li"</div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>4. Past Tense</h3>
+        <p>Verbs change form for past tense. Common patterns:</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">say (present)</span><span class="sh">goul</span></div>
+          <div class="item"><span class="en">said (past)</span><span class="sh">gal / gelt</span></div>
+          <div class="item"><span class="en">eat (present)</span><span class="sh">kla</span></div>
+          <div class="item"><span class="en">ate (past)</span><span class="sh">kelt</span></div>
+          <div class="item"><span class="en">go (present)</span><span class="sh">mchi</span></div>
+          <div class="item"><span class="en">went (past)</span><span class="sh">mcheit / mcha</span></div>
+          <div class="item"><span class="en">come (present)</span><span class="sh">ji jay</span></div>
+          <div class="item"><span class="en">came (past)</span><span class="sh">jeyt / ja</span></div>
+          <div class="item"><span class="en">think (present)</span><span class="sh">vakar</span></div>
+          <div class="item"><span class="en">thought (past)</span><span class="sh">vakart</span></div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>5. Negation</h3>
+        <p>To negate, use <code>ebde</code> or <code>ma...4i</code> around the verb.</p>
+        <div class="example">
+          <div class="en">&#9654; <i>Ane man3rav</i> = "I don't know" (<i>ma</i>- + <i>n3rav</i> + <i>-4i</i>)</div>
+          <div class="en">&#9654; <i>ebde</i> = "no"</div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>6. Questions</h3>
+        <p>Question words come at the start of the sentence.</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">what</span><span class="sh">chnhu / chnhi</span></div>
+          <div class="item"><span class="en">where</span><span class="sh">mnen</span></div>
+          <div class="item"><span class="en">when</span><span class="sh">eynte</span></div>
+          <div class="item"><span class="en">why</span><span class="sh">lach</span></div>
+          <div class="item"><span class="en">how</span><span class="sh">coma</span></div>
+          <div class="item"><span class="en">who</span><span class="sh">mnhu</span></div>
+          <div class="item"><span class="en">how are you</span><span class="sh">chmassy / ch7alak</span></div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>7. The Definite Article</h3>
+        <p>The prefix <code>l-</code> / <code>el-</code> is attached to nouns for "the".</p>
+        <div class="example">
+          <div class="en">&#9654; <i>chems</i> (sun) &#8594; <b>echems</b> or <b>lchems</b> (the sun)</div>
+          <div class="en">&#9654; <i>9amar</i> (moon) &#8594; <b>l9amar</b> (the moon)</div>
+          <div class="en">&#9654; <i>medrsa</i> (school) &#8594; <b>lmedrsa</b> (the school)</div>
+          <div class="sh">&#8594; <i>V l9esem</i> = "In the classroom"</div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>8. Verb Roots &amp; Inflections</h3>
+        <p>The -t suffix often marks first person singular past tense.</p>
+        <div class="example">
+          <div class="en">&#9654; <i>kla</i> (eat) &#8594; <b>kelt</b> (I ate)</div>
+          <div class="en">&#9654; <i>gra</i> (read) &#8594; <b>grayt</b> (I read, past)</div>
+          <div class="en">&#9654; <i>mcha</i> (go) &#8594; <b>mcheit</b> (I went)</div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>9. Describing with Adjectives</h3>
+        <p>Adjectives follow the noun, often using <code>zein</code> (good/nice).</p>
+        <div class="example">
+          <div class="en">&#9654; <i>yom zein</i> = "a good day"</div>
+          <div class="en">&#9654; <i>dar kbire</i> = "a big house"</div>
+          <div class="sh">&#8594; <i>Leyle zeine</i> = "Good night"</div>
+        </div>
+      </div>
+      <div class="rule-section">
+        <h3>10. Prepositions</h3>
+        <div class="rule-grid">
+          <div class="item"><span class="en">in</span><span class="sh">v / fi</span></div>
+          <div class="item"><span class="en">to</span><span class="sh">le / l-</span></div>
+          <div class="item"><span class="en">from</span><span class="sh">mn</span></div>
+          <div class="item"><span class="en">about</span><span class="sh">3an / 3la</span></div>
+          <div class="item"><span class="en">with</span><span class="sh">b- / m3a</span></div>
+          <div class="item"><span class="en">after</span><span class="sh">apre / ba3d</span></div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>11. Arabic Root System</h3>
+        <p>Shat uses the Arabic <b>3-consonant root</b> system. Most words derive from a 3-letter root that carries a core meaning. Patterns of vowels and affixes create related words.</p>
+        <div class="example">
+          <div class="en">&#9654; Root <b>K-T-B</b> (writing):</div>
+          <div class="sh"><i>ktab</i> = book, <i>kateb</i> = writer, <i>mektoub</i> = written, <i>mekteb</i> = office/desk</div>
+        </div>
+        <div class="example">
+          <div class="en">&#9654; Root <b>D-R-S</b> (study):</div>
+          <div class="sh"><i>darss</i> = lesson, <i>medrsa</i> = school, <i>graye</i> = studying, <i>mu3alim</i> = teacher</div>
+        </div>
+        <div class="example">
+          <div class="en">&#9654; Root <b>3-L-M</b> (knowledge):</div>
+          <div class="sh"><i>mu3alim</i> = teacher, <i>3elm</i> = science/knowledge, <i>ma3loma</i> = information</div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>12. Gender: Masculine &amp; Feminine</h3>
+        <p>Shat has two genders. Feminine nouns typically end with <code>-a</code> or <code>-e</code>. The feminine <code>t-</code> prefix appears on verbs for "she".</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">teacher (m)</span><span class="sh">mu3alim</span></div>
+          <div class="item"><span class="en">teacher (f)</span><span class="sh">mu3alima</span></div>
+          <div class="item"><span class="en">student (m)</span><span class="sh">telmi4</span></div>
+          <div class="item"><span class="en">student (f)</span><span class="sh">telmi4a</span></div>
+          <div class="item"><span class="en">friend (m)</span><span class="sh">sa7b</span></div>
+          <div class="item"><span class="en">friend (f)</span><span class="sh">sa7ba</span></div>
+          <div class="item"><span class="en">he said</span><span class="sh">gal</span></div>
+          <div class="item"><span class="en">she said</span><span class="sh">galet / tgal</span></div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>13. Plurals: Broken &amp; Regular</h3>
+        <p>Shat uses Arabic-style <b>broken plurals</b> (internal vowel changes) and regular <b>-in/-at</b> suffixes.</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">book</span><span class="sh">ktab &#8594; ktoub</span></div>
+          <div class="item"><span class="en">teacher</span><span class="sh">mu3alim &#8594; mu3alimin</span></div>
+          <div class="item"><span class="en">student</span><span class="sh">telmi4 &#8594; tlami4</span></div>
+          <div class="item"><span class="en">house</span><span class="sh">dar &#8594; dyar</span></div>
+          <div class="item"><span class="en">lesson</span><span class="sh">darss &#8594; drusa</span></div>
+          <div class="item"><span class="en">star</span><span class="sh">njme &#8594; noujoum</span></div>
+          <div class="item"><span class="en">family</span><span class="sh">3a2ile &#8594; 3a2ilat</span></div>
+          <div class="item"><span class="en">brother</span><span class="sh">5u &#8594; 5out</span></div>
+        </div>
+        <div class="example">
+          <div class="sh">&#8594; Pattern: <b>C1C2C3</b> &#8594; <b>C1C2uC3</b> or <b>C1waC2C3</b></div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>14. Numbers &amp; Counting</h3>
+        <p>Numbers in Shat follow Arabic rules. The noun after a number is usually singular for 3-10, then plural for 11+.</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">one</span><span class="sh">wa7d</span></div>
+          <div class="item"><span class="en">two</span><span class="sh">4neyn</span></div>
+          <div class="item"><span class="en">three</span><span class="sh">tlata</span></div>
+          <div class="item"><span class="en">four</span><span class="sh">rb3a</span></div>
+          <div class="item"><span class="en">five</span><span class="sh">5emsa</span></div>
+          <div class="item"><span class="en">ten</span><span class="sh">3chra</span></div>
+          <div class="item"><span class="en">hundred</span><span class="sh">mya</span></div>
+          <div class="item"><span class="en">thousand</span><span class="sh">alf</span></div>
+        </div>
+        <div class="example">
+          <div class="en">&#9654; <i>3chra ktoub</i> = ten books</div>
+          <div class="en">&#9654; <i>ktab wa7d</i> = one book</div>
+          <div class="sh">&#8594; Noun comes before the number for "one" and "two"</div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>15. Future Tense</h3>
+        <p>Future is marked by the prefix <code>gha-</code> or <code>mashi-</code> before the verb.</p>
+        <div class="example">
+          <div class="en">&#9654; <i>gha nmchi</i> = I will go</div>
+          <div class="en">&#9654; <i>mashi nkla</i> = I will eat</div>
+          <div class="en">&#9654; <i>gha yji</i> = he will come</div>
+          <div class="sh">&#8594; <i>Gha nchovak ba3din</i> = "I will see you later"</div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>16. First Person Verb Prefix <code>n-</code></h3>
+        <p>The prefix <code>n-</code> marks first person (I) in present/future verbs. This is a direct Arabic feature.</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">I go</span><span class="sh">nmchi</span></div>
+          <div class="item"><span class="en">I eat</span><span class="sh">nkla</span></div>
+          <div class="item"><span class="en">I know</span><span class="sh">n3rav</span></div>
+          <div class="item"><span class="en">I can</span><span class="sh">n9ed</span></div>
+          <div class="item"><span class="en">I see</span><span class="sh">nchov</span></div>
+          <div class="item"><span class="en">I think</span><span class="sh">nvakar</span></div>
+          <div class="item"><span class="en">I sleep</span><span class="sh">nerged</span></div>
+          <div class="item"><span class="en">I say</span><span class="sh">ngoul</span></div>
+        </div>
+        <div class="example">
+          <div class="en">&#9654; <i>Ane n9ed nsewel?</i> = "Can I ask?"</div>
+          <div class="sh">&#8594; <i>n-</i> + verb root = first person present</div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>17. Pronoun Suffixes on Verbs &amp; Prepositions</h3>
+        <p>Object pronouns attach directly to the end of verbs and prepositions, like in Arabic.</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">he asked <b>me</b></span><span class="sh">sewel <b>ni</b></span></div>
+          <div class="item"><span class="en">she asked <b>me</b></span><span class="sh">sewlt <b>ni</b></span></div>
+          <div class="item"><span class="en">call <b>me</b></span><span class="sh">telven <b>li</b></span></div>
+          <div class="item"><span class="en">to <b>him</b></span><span class="sh">l <b>ih</b> / lih</span></div>
+          <div class="item"><span class="en">to <b>her</b></span><span class="sh">l <b>ha</b> / lha</span></div>
+          <div class="item"><span class="en">to <b>them</b></span><span class="sh">l <b>houm</b> / lhoum</span></div>
+          <div class="item"><span class="en">from <b>him</b></span><span class="sh">mn <b>nou</b></span></div>
+          <div class="item"><span class="en">with <b>you</b></span><span class="sh">m3a <b>k</b></span></div>
+        </div>
+        <div class="example">
+          <div class="en">&#9654; <i>3ta ni ktab</i> = "He gave me a book"</div>
+          <div class="sh">&#8594; Object suffixes attach to prepositions and verbs</div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>18. Colors &amp; Their Patterns</h3>
+        <p>Colors follow the Arabic <code>aCCaC</code> pattern for masculine and <code>CaCCa</code> for feminine.</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">red (m)</span><span class="sh">7mer</span></div>
+          <div class="item"><span class="en">red (f)</span><span class="sh">7emra</span></div>
+          <div class="item"><span class="en">white (m)</span><span class="sh">byed</span></div>
+          <div class="item"><span class="en">white (f)</span><span class="sh">byeda</span></div>
+          <div class="item"><span class="en">black (m)</span><span class="sh">k7el</span></div>
+          <div class="item"><span class="en">black (f)</span><span class="sh">k7ela</span></div>
+          <div class="item"><span class="en">green (m)</span><span class="sh">5der</span></div>
+          <div class="item"><span class="en">green (f)</span><span class="sh">5edra</span></div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>19. The Possessive Construct <code>dyel-</code> / <code>d-</code></h3>
+        <p>Shat uses <code>dyel</code> or <code>d-</code> to link nouns, like Arabic <i>idaafa</i> construction ("of").</p>
+        <div class="example">
+          <div class="en">&#9654; <i>ktab d mu3alim</i> = "the teacher's book" (book of teacher)</div>
+          <div class="en">&#9654; <i>dar dyel walde</i> = "mother's house"</div>
+          <div class="en">&#9654; <i>ism lmousta5dim</i> = "username" (name of the user)</div>
+          <div class="sh">&#8594; <i>Noun + d/de/dyel + possessor</i></div>
+        </div>
+      </div>
+
+      <div class="rule-section">
+        <h3>20. The Letter <code>9</code> - Arabic <i>Qaf</i></h3>
+        <p>Shat uses numbers to represent Arabic letters not in the Latin alphabet:</p>
+        <div class="rule-grid">
+          <div class="item"><span class="en">2</span><span class="sh">hamza (glottal stop)</span></div>
+          <div class="item"><span class="en">3</span><span class="sh">3ayn (ع)</span></div>
+          <div class="item"><span class="en">4</span><span class="sh">sheen (ش) or similar</span></div>
+          <div class="item"><span class="en">5</span><span class="sh">khaa (خ)</span></div>
+          <div class="item"><span class="en">6</span><span class="sh">ttaa (ط)</span></div>
+          <div class="item"><span class="en">7</span><span class="sh">7aa (ح)</span></div>
+          <div class="item"><span class="en">8</span><span class="sh">ghayn (غ)</span></div>
+          <div class="item"><span class="en">9</span><span class="sh">qaf (ق)</span></div>
+        </div>
+        <div class="example">
+          <div class="en">&#9654; <i>9amar</i> = moon (with qaf), <i>3ayn</i> = eye, <i>7oub</i> = love</div>
+          <div class="sh">&#8594; These numbers are read as Arabic letters in pronunciation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal for editing translation -->
+<div class="modal-overlay" id="trans-modal">
+  <div class="modal">
+    <h3>Edit Translation</h3>
+    <div class="form-group">
+      <label>Word / Phrase</label>
+      <input class="form-input" id="modal-word" readonly style="opacity:.6;">
+    </div>
+    <div class="form-group">
+      <label>Shat Meaning</label>
+      <input class="form-input" id="modal-meaning">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveModalTranslation()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for editing prompt/answer -->
+<div class="modal-overlay" id="pa-modal">
+  <div class="modal">
+    <h3>Edit Prompt &amp; Answer</h3>
+    <div class="form-group">
+      <label>Prompt (question in English)</label>
+      <input class="form-input" id="pa-modal-prompt" placeholder="Prompt" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>Answer (in Shat language)</label>
+      <input class="form-input" id="pa-modal-answer" placeholder="Answer" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closePAModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="savePAModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE = 'http://localhost:3000';
+let paData = { prompts: [], answers: [] };
+let storyText = '';
+let transData = { en: {}, shat: {} };
+let storyExpanded = false;
+let modalKey = '';
+let translatorTimer = null;
+
+async function loadFile(name) {
+  const r = await fetch(`${BASE}/api/data/${name}`);
+  if (!r.ok) throw new Error(`Failed to load ${name}`);
+  return await r.text();
+}
+
+async function saveFile(name, content) {
+  const r = await fetch(`${BASE}/api/data/${name}`, { method: 'POST', body: content });
+  if (!r.ok) throw new Error(`Failed to save ${name}`);
+  return await r.json();
+}
+
+async function init() {
+  try {
+    const [paStr, storyStr, transStr] = await Promise.all([
+      loadFile('prompts_answers.json'),
+      loadFile('shat_story.txt'),
+      loadFile('translations_shat.json')
+    ]);
+    paData = JSON.parse(paStr);
+    storyText = storyStr;
+    transData = JSON.parse(transStr);
+    renderAll();
+  } catch (e) {
+    document.querySelector('.content.active').innerHTML =
+      `<div class="card"><p style="color:#f85149;">Error loading files. Make sure the server is running on port 3000.</p><pre style="margin-top:8px;font-size:12px;">${e.message}</pre></div>`;
+  }
+}
+
+function switchView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`.nav-btn[data-view="${id}"]`).classList.add('active');
+
+  if (id === 'view-pa') renderPA();
+  if (id === 'view-story') renderStoryPreview();
+  if (id === 'view-trans') renderTransGrid();
+  if (id === 'edit-story') renderStoryEditor();
+  if (id === 'edit-trans') renderTransEditor();
+  if (id === 'add-trans') { renderAddTransExisting(); checkPendingWord(); }
+}
+
+function renderAll() {
+  renderPA();
+  renderStoryPreview();
+  renderTransGrid();
+}
+
+// ===== SHAT GRAMMAR RULES =====
+const ADJECTIVES = new Set([
+  'zein','zeine','chwein','chwine','5amr','5amra',
+  'kbir','kbire','sghir','sghire','9dim','9dime','jdid','jdide',
+  'sa3id','sa3da','7azin','7azne','mn63an','mn63a',
+  'ji3an','ji3a','3a6chan','3a6cha','ta3ban','ta3ba',
+  'merid','merda','msta7fy','msta7fye','mt7ames','mt7amsa',
+  'mn5la3','mn5l3a','mtba7ar','mtba7ra','hadi2','hadi2a',
+  'mrelaxy','mrelaxya','var9','var9a','megfoul','megfoula',
+  'meftou7','meftou7a','7amer','7amra','byed','byeda',
+  'k7el','k7ela','5der','5edra','7amy','7amya','bard','barda',
+  'wa7l','sayb','sayba','hweyn','w9edt','w9da',
+  'mt7asses','mt7assa','ma36oub','ma36ouba','3aref','3arfa',
+  'mli7','mli7a','la7','rasmi','se bien','bari'
+]);
+const ADJ_STOP_WORDS = new Set([
+  'v','mn','le','3la','3an','m3a','b-','fi',
+  'ane','nte','howe','hiye','n7ne','houme',
+  'li','lak','lne','lhoum','dyel','d-',
+  'u','wa','we','bas','y9ir','ebde','eheh','ewe'
+]);
+
+const SUN_LETTERS = ['ch','s','r','t','8','n','p','w','2','d','f','j'];
+
+function getDefiniteForm(word) {
+  if (!word) return word;
+  const w = word.toLowerCase();
+  for (const sl of SUN_LETTERS) {
+    if (w.startsWith(sl)) {
+      return 'e' + w.slice(0, sl.length) + word;
+    }
+  }
+  return 'l' + word;
+}
+
+function applyShatRules(words) {
+  if (words.length < 2) return;
+  for (let i = 0; i < words.length - 1; i++) {
+    const cur = words[i].clean.toLowerCase();
+    const nxt = words[i + 1].clean.toLowerCase();
+    if (ADJECTIVES.has(cur) && !ADJECTIVES.has(nxt) && !ADJ_STOP_WORDS.has(nxt)) {
+      const t = words[i];
+      words[i] = words[i + 1];
+      words[i + 1] = t;
+    }
+  }
+}
+
+// ===== TRANSLATOR =====
+function translateText() {
+  clearTimeout(translatorTimer);
+  translatorTimer = setTimeout(doTranslate, 250);
+}
+
+function doTranslate() {
+  const input = document.getElementById('en-input').value.trim();
+  const output = document.getElementById('shat-output');
+  const missingContainer = document.getElementById('missing-words');
+  const missingCount = document.getElementById('missing-count');
+
+  if (!input) {
+    output.textContent = '';
+    missingContainer.innerHTML = '';
+    missingCount.textContent = '(0)';
+    document.getElementById('translator-status').textContent = 'Type to translate';
+    return;
+  }
+
+  const dict = transData.en || {};
+  const phrases = Object.keys(dict).sort((a, b) => b.split(/\s+/).length - a.split(/\s+/).length || b.length - a.length);
+
+  const tokens = input.match(/\S+\s*/g) || [];
+
+  // Rule: swap "ago" with the word before it
+  for (let i = 1; i < tokens.length; i++) {
+    const w = tokens[i].replace(/\s+$/, '').toLowerCase().replace(/[.,!?;:()"'"]/g, '');
+    if (w === 'ago') {
+      const tmp = tokens[i];
+      tokens[i] = tokens[i - 1];
+      tokens[i - 1] = tmp;
+    }
+  }
+
+  const result = [];
+  const missing = new Set();
+  let ci = 0;
+  let nextDefinite = false;
+
+  while (ci < tokens.length) {
+    const remaining = tokens.slice(ci).map(t => t.replace(/\s+$/, '')).join(' ');
+    const trail = tokens.slice(ci).map(t => t.match(/\s*$/)[0] || '').join('').slice(remaining.length);
+
+    let matched = false;
+    for (const phrase of phrases) {
+      if (ci + phrase.split(/\s+/).length > tokens.length) continue;
+      const candidate = tokens.slice(ci, ci + phrase.split(/\s+/).length).map(t => t.replace(/\s+$/, '')).join(' ');
+      if (candidate.toLowerCase() === phrase) {
+        // "the" as a standalone phrase: skip output, mark next word
+        if (phrase === 'the') {
+          nextDefinite = true;
+          ci++;
+          matched = true;
+          break;
+        }
+        // "the X Y..." phrase: already has definite form in dict
+        let val = dict[phrase];
+        if (phrase.startsWith('the ')) {
+          // already defined with article, use as-is
+        } else if (nextDefinite) {
+          val = getDefiniteForm(val);
+          nextDefinite = false;
+        }
+        const trailingSpace = tokens[ci + phrase.split(/\s+/).length - 1]?.match(/\s*$/)[0] || ' ';
+        result.push({
+          clean: val.toLowerCase(),
+          html: `<span class="translated-word">${escapeHtml(val)}</span>${escapeHtml(trailingSpace)}`
+        });
+        ci += phrase.split(/\s+/).length;
+        matched = true;
+        break;
+      }
+    }
+
+    if (matched) continue;
+
+    const raw = tokens[ci];
+    const word = raw.replace(/\s+$/, '');
+    const space = raw.match(/\s*$/)[0] || '';
+    const clean = word.toLowerCase().replace(/[.,!?;:()"'"]/g, '');
+
+    // Rule: "the" + sun/moon letters
+    if (clean === 'the') {
+      nextDefinite = true;
+      ci++;
+      continue;
+    }
+
+    if (dict[clean]) {
+      let val = dict[clean];
+      if (nextDefinite) {
+        val = getDefiniteForm(val);
+        nextDefinite = false;
+      }
+      result.push({
+        clean: val.toLowerCase(),
+        html: `<span class="translated-word">${escapeHtml(val)}</span>${escapeHtml(space)}`
+      });
+    } else if (clean) {
+      let display = word;
+      if (nextDefinite) {
+        display = getDefiniteForm(word);
+        nextDefinite = false;
+      }
+      result.push({
+        clean: display.toLowerCase(),
+        html: `<span class="untranslated-word" title="Click to add translation">${escapeHtml(display)}</span>${escapeHtml(space)}`
+      });
+      if (clean) missing.add(clean);
+    } else {
+      result.push({
+        clean: '',
+        html: escapeHtml(raw)
+      });
+    }
+    ci++;
+  }
+
+  applyShatRules(result);
+  output.innerHTML = result.map(r => r.html).join('');
+
+  if (missing.size > 0) {
+    document.getElementById('translator-status').textContent = `${missing.size} word(s) missing`;
+    missingCount.textContent = `(${missing.size})`;
+    missingContainer.innerHTML = Array.from(missing).sort().map(w =>
+      `<span class="missing-tag" onclick="goAddTranslation('${escapeHtml(w)}')">
+        <span class="add-icon">+</span> ${escapeHtml(w)}
+      </span>`
+    ).join('');
+  } else {
+    document.getElementById('translator-status').textContent = 'All words translated';
+    missingCount.textContent = '(0)';
+    missingContainer.innerHTML = '<span style="color:#7ee787;font-size:13px;">All words have translations!</span>';
+  }
+}
+
+function goAddTranslation(word) {
+  switchView('add-trans');
+  document.getElementById('new-trans-word').value = word;
+  document.getElementById('new-trans-meaning').focus();
+}
+
+let pendingWord = '';
+
+function checkPendingWord() {
+  if (pendingWord) {
+    document.getElementById('new-trans-word').value = pendingWord;
+    pendingWord = '';
+  }
+}
+
+// ===== PROMPTS & ANSWERS =====
+function renderPA() {
+  const list = document.getElementById('pa-list');
+  document.getElementById('pa-count').textContent = `${paData.prompts.length} pairs`;
+  list.innerHTML = paData.prompts.map((p, i) => `
+    <div class="pa-item">
+      <div class="pa-prompt" onclick="toggleAnswer(${i})">
+        <span>${escapeHtml(p)}</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="arrow">&#9654;</span>
+        </div>
+      </div>
+      <div class="pa-answer" id="answer-${i}">
+        <div class="label">Answer</div>
+        <div class="text">${escapeHtml(paData.answers[i])}</div>
+      </div>
+      <div style="display:flex;gap:4px;padding:6px 12px 10px;border-top:1px solid #21262d;">
+        <button class="btn btn-secondary pa-edit-btn" data-idx="${i}" style="padding:3px 10px;font-size:11px;">Edit</button>
+        <button class="btn btn-danger pa-del-btn" data-idx="${i}" style="padding:3px 10px;font-size:11px;">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleAnswer(i) {
+  const el = document.getElementById(`answer-${i}`);
+  const prompt = el.previousElementSibling;
+  el.classList.toggle('open');
+  prompt.classList.toggle('open');
+}
+
+function addPromptAnswer() {
+  const p = document.getElementById('new-prompt').value.trim();
+  const a = document.getElementById('new-answer').value.trim();
+  if (!p || !a) { document.getElementById('add-status').textContent = 'Both fields required'; return; }
+
+  paData.prompts.push(p);
+  paData.answers.push(a);
+
+  saveFile('prompts_answers.json', JSON.stringify(paData, null, 2))
+    .then(() => {
+      document.getElementById('new-prompt').value = '';
+      document.getElementById('new-answer').value = '';
+      document.getElementById('add-status').textContent = '\u2713 Saved!';
+      renderPA();
+      setTimeout(() => document.getElementById('add-status').textContent = '', 2000);
+    })
+    .catch(e => document.getElementById('add-status').textContent = 'Error: ' + e.message);
+}
+
+let paEditIdx = -1;
+
+document.getElementById('pa-list').addEventListener('click', function(e) {
+  const idx = e.target.dataset.idx;
+  if (e.target.classList.contains('pa-edit-btn') && idx !== undefined) {
+    paEditIdx = parseInt(idx);
+    document.getElementById('pa-modal-prompt').value = paData.prompts[paEditIdx];
+    document.getElementById('pa-modal-answer').value = paData.answers[paEditIdx];
+    document.getElementById('pa-modal').classList.add('show');
+  }
+  if (e.target.classList.contains('pa-del-btn') && idx !== undefined) {
+    deletePA(parseInt(idx));
+  }
+});
+
+function closePAModal() {
+  document.getElementById('pa-modal').classList.remove('show');
+}
+
+async function savePAModal() {
+  const p = document.getElementById('pa-modal-prompt').value.trim();
+  const a = document.getElementById('pa-modal-answer').value.trim();
+  if (!p || !a) return;
+  paData.prompts[paEditIdx] = p;
+  paData.answers[paEditIdx] = a;
+  closePAModal();
+  try {
+    await saveFile('prompts_answers.json', JSON.stringify(paData, null, 2));
+    renderPA();
+  } catch (e) {
+    alert('Save failed: ' + e.message);
+  }
+}
+
+async function deletePA(idx) {
+  if (!confirm(`Delete prompt "${paData.prompts[idx]}"?`)) return;
+  paData.prompts.splice(idx, 1);
+  paData.answers.splice(idx, 1);
+  try {
+    await saveFile('prompts_answers.json', JSON.stringify(paData, null, 2));
+    renderPA();
+  } catch (e) {
+    alert('Delete failed: ' + e.message);
+  }
+}
+
+// ===== STORY =====
+function renderStoryPreview() {
+  const lines = storyText.split('\n').filter(l => l.trim());
+  const previewLines = lines.slice(0, 5);
+  const el = document.getElementById('story-content');
+
+  if (storyExpanded) {
+    el.innerHTML = lines.map(l => `<p>${escapeHtml(l)}</p>`).join('');
+  } else {
+    el.innerHTML = previewLines.map(l => `<p>${escapeHtml(l)}</p>`).join('');
+  }
+
+  document.getElementById('story-fade').style.display = (lines.length > 5 && !storyExpanded) ? 'block' : 'none';
+  document.getElementById('story-preview').classList.toggle('expanded', storyExpanded);
+
+  const toggleText = storyExpanded ? '\u25B2 Collapse' : '\u25BC Expand';
+  document.getElementById('story-toggle-btn').textContent = toggleText;
+  document.getElementById('story-toggle-btn2').textContent = storyExpanded ? '\u25B2 Show less' : '\u25BC Show full story';
+}
+
+function toggleStoryPreview() {
+  storyExpanded = !storyExpanded;
+  renderStoryPreview();
+}
+
+function renderStoryEditor() {
+  const ta = document.getElementById('story-editor');
+  ta.value = storyText;
+  updateLineNumbers();
+  document.getElementById('story-save-status').textContent = '';
+  document.getElementById('story-status').textContent = `${storyText.split('\n').length} lines`;
+}
+
+function updateLineNumbers() {
+  const ta = document.getElementById('story-editor');
+  const ln = document.getElementById('line-numbers');
+  const lines = ta.value.split('\n');
+  ln.innerHTML = lines.map((_, i) => `<span>${i + 1}</span>`).join('');
+}
+
+function syncScroll() {
+  const ta = document.getElementById('story-editor');
+  const ln = document.getElementById('line-numbers');
+  ln.scrollTop = ta.scrollTop;
+}
+
+async function saveStory() {
+  const ta = document.getElementById('story-editor');
+  const status = document.getElementById('story-save-status');
+  storyText = ta.value;
+  status.textContent = 'Saving...';
+  try {
+    await saveFile('shat_story.txt', storyText);
+    status.textContent = '\u2713 Saved!';
+    document.getElementById('story-status').textContent = `${storyText.split('\n').length} lines`;
+    setTimeout(() => status.textContent = '', 2000);
+  } catch (e) {
+    status.textContent = '\u2717 Error: ' + e.message;
+  }
+}
+
+// ===== TRANSLATIONS =====
+function renderTransGrid() {
+  const grid = document.getElementById('trans-grid');
+  const en = transData.en || {};
+  const q = (document.getElementById('dict-search')?.value || '').toLowerCase();
+  const entries = Object.entries(en).filter(([w, m]) =>
+    w.toLowerCase().includes(q) || m.toLowerCase().includes(q)
+  );
+  document.getElementById('trans-count').textContent = `${entries.length} / ${Object.keys(en).length} entries`;
+
+  grid.innerHTML = entries.map(([word, meaning]) => `
+    <div class="trans-card">
+      <div class="trans-word">${escapeHtml(word)}</div>
+      <div class="trans-meaning">${escapeHtml(meaning)}</div>
+      <button class="btn btn-danger del-trans-btn" data-word="${escapeHtml(word)}" title="Delete" style="position:absolute;top:6px;right:6px;padding:2px 6px;font-size:11px;">&#10005;</button>
+    </div>
+  `).join('');
+}
+
+function renderTransEditor() {
+  const container = document.getElementById('edit-trans-list');
+  const en = transData.en || {};
+  const q = (document.getElementById('edit-trans-search')?.value || '').toLowerCase();
+  const entries = Object.entries(en).filter(([w, m]) =>
+    w.toLowerCase().includes(q) || m.toLowerCase().includes(q)
+  );
+
+  container.innerHTML = entries.map(([word, meaning]) => `
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; padding:8px; background:#0d1117; border-radius:6px; border:1px solid #30363d;">
+      <span style="min-width:120px; font-weight:600; color:#58a6ff;">${escapeHtml(word)}</span>
+      <span style="color:#8b949e;">&#8594;</span>
+      <span style="flex:1; color:#7ee787;">${escapeHtml(meaning)}</span>
+      <button class="btn btn-secondary edit-trans-btn" style="padding:4px 12px; font-size:12px;" data-word="${escapeHtml(word)}">Edit</button>
+      <button class="btn btn-danger del-trans-btn" style="padding:4px 12px; font-size:12px;" data-word="${escapeHtml(word)}" title="Delete">&#10005;</button>
+    </div>
+  `).join('');
+  document.getElementById('trans-status').textContent = `${entries.length} / ${Object.keys(en).length} entries`;
+}
+
+document.getElementById('edit-trans-list').addEventListener('click', function(e) {
+  if (e.target.classList.contains('edit-trans-btn')) {
+    openTransModal(e.target.dataset.word);
+  }
+  if (e.target.classList.contains('del-trans-btn')) {
+    deleteTranslation(e.target.dataset.word);
+  }
+});
+
+document.getElementById('trans-grid').addEventListener('click', function(e) {
+  if (e.target.classList.contains('del-trans-btn')) {
+    deleteTranslation(e.target.dataset.word);
+  }
+});
+
+function openTransModal(key) {
+  modalKey = key;
+  document.getElementById('modal-word').value = key;
+  document.getElementById('modal-meaning').value = transData.en[key] || '';
+  document.getElementById('trans-modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('trans-modal').classList.remove('show');
+}
+
+async function saveModalTranslation() {
+  const meaning = document.getElementById('modal-meaning').value.trim();
+  if (!meaning) return;
+
+  const oldMeaning = transData.en[modalKey];
+  transData.en[modalKey] = meaning;
+  if (transData.shat[oldMeaning] === modalKey) {
+    delete transData.shat[oldMeaning];
+  }
+  transData.shat[meaning] = modalKey;
+
+  const out = JSON.stringify(transData, null, 2);
+  try {
+    await saveFile('translations_shat.json', out);
+    closeModal();
+    renderTransGrid();
+    renderTransEditor();
+  } catch (e) {
+    alert('Save failed: ' + e.message);
+  }
+}
+
+async function deleteTranslation(word) {
+  if (!confirm(`Delete "${word}" from dictionary?`)) return;
+  const meaning = transData.en[word];
+  delete transData.en[word];
+  if (meaning && transData.shat[meaning] === word) {
+    delete transData.shat[meaning];
+  }
+  const out = JSON.stringify(transData, null, 2);
+  try {
+    await saveFile('translations_shat.json', out);
+    renderTransGrid();
+    renderTransEditor();
+    renderAddTransExisting();
+  } catch (e) {
+    alert('Delete failed: ' + e.message);
+  }
+}
+
+function renderAddTransExisting() {
+  const container = document.getElementById('add-trans-existing');
+  const en = transData.en || {};
+  const entries = Object.entries(en);
+  container.innerHTML = entries.length
+    ? entries.map(([word, meaning]) => `
+      <div style="display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid #21262d;">
+        <span style="min-width:100px; font-weight:600; color:#58a6ff;">${escapeHtml(word)}</span>
+        <span style="color:#8b949e;">&#8594;</span>
+        <span style="flex:1; color:#7ee787;">${escapeHtml(meaning)}</span>
+      </div>
+    `).join('')
+    : '<p style="color:#8b949e;">No translations yet.</p>';
+}
+
+async function addTranslation() {
+  const word = document.getElementById('new-trans-word').value.trim().toLowerCase();
+  const meaning = document.getElementById('new-trans-meaning').value.trim().toLowerCase();
+  const status = document.getElementById('add-trans-status');
+  if (!word || !meaning) { status.textContent = 'Both fields required'; return; }
+  if (transData.en[word]) { status.textContent = 'Word already exists'; return; }
+
+  transData.en[word] = meaning;
+  transData.shat[meaning] = word;
+
+  const out = JSON.stringify(transData, null, 2);
+  status.textContent = 'Saving...';
+  try {
+    await saveFile('translations_shat.json', out);
+    document.getElementById('new-trans-word').value = '';
+    document.getElementById('new-trans-meaning').value = '';
+    status.textContent = '\u2713 Saved!';
+    renderTransGrid();
+    renderTransEditor();
+    renderAddTransExisting();
+    setTimeout(() => status.textContent = '', 2000);
+  } catch (e) {
+    status.textContent = '\u2717 Error: ' + e.message;
+  }
+}
+
+// ===== UTILITY =====
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    const active = document.querySelector('.view.active');
+    if (active) {
+      const id = active.id;
+      if (id === 'edit-story') { e.preventDefault(); saveStory(); }
+    }
+  }
+  if (e.key === 'Escape') closeModal();
+});
+
+// ===== START =====
+init();
+</script>
+</body>
+</html>
