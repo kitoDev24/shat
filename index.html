@@ -99,6 +99,15 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; colo
 .rule-grid .item { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; font-size: 13px; }
 .rule-grid .item .en { color: #8b949e; }
 .rule-grid .item .sh { color: #58a6ff; font-weight: 600; }
+.grammar-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.grammar-table th { background: #161b22; color: #8b949e; padding: 10px 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #30363d; position: sticky; top: 0; }
+.grammar-table td { padding: 8px 12px; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+.grammar-table tr:hover td { background: #1c2128; }
+.grammar-table td input { width: 100%; background: transparent; border: 1px solid transparent; color: #c9d1d9; font-size: 13px; padding: 4px 6px; border-radius: 4px; }
+.grammar-table td input:focus { outline: none; border-color: #58a6ff; background: #0d1117; }
+.grammar-table td .shat-cell { color: #7ee787; font-weight: 600; }
+.grammar-table td .eng-cell { color: #58a6ff; font-weight: 600; }
+.grammar-table td input::placeholder { color: #484f58; font-style: italic; }
 </style>
 </head>
 <body>
@@ -117,6 +126,9 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; colo
     </button>
     <button class="nav-btn" data-view="view-trans" onclick="switchView('view-trans')">
       <span class="icon">&#9674;</span> Dictionary
+    </button>
+    <button class="nav-btn" data-view="grammar" onclick="switchView('grammar')">
+      <span class="icon">&#9776;</span> Grammar Table
     </button>
     <button class="nav-btn" data-view="add-trans" onclick="switchView('add-trans')">
       <span class="icon">+</span> Add Translation
@@ -170,7 +182,33 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; colo
     </div>
   </div>
 
-  <!-- ===== SHOW PROMPTS & ANSWERS ===== -->
+  <!-- ===== GRAMMAR TABLE ===== -->
+  <div id="grammar" class="content view">
+    <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
+      <h2>&#9776; Grammar Table</h2>
+      <span class="status" id="grammar-count">0 words</span>
+    </div>
+    <input class="form-input" id="grammar-search" placeholder="Search..." oninput="renderGrammarTable()" style="margin-bottom:16px;">
+    <div class="card" style="overflow-x:auto;">
+      <table class="grammar-table" id="grammar-table">
+        <thead>
+          <tr>
+            <th>English</th>
+            <th>Shat</th>
+            <th>Plural</th>
+            <th>Type</th>
+            <th>Feminine</th>
+            <th>1st Person</th>
+            <th>3rd M</th>
+            <th>3rd F</th>
+            <th>Followed by</th>
+            <th>Preceded by</th>
+          </tr>
+        </thead>
+        <tbody id="grammar-tbody"></tbody>
+      </table>
+    </div>
+  </div>
   <div id="view-pa" class="content view">
     <div class="toolbar" style="margin:-24px -24px 24px -24px; padding:14px 24px;">
       <h2>&#9635; Prompts &amp; Answers</h2>
@@ -238,6 +276,43 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; colo
       <div class="form-group">
         <label>Shat translation</label>
         <input class="form-input" id="new-trans-meaning" placeholder="e.g. rakan" autocomplete="off">
+      </div>
+      <div style="margin-bottom:12px;">
+        <button class="btn btn-secondary" onclick="toggleGrammarFields()" style="font-size:12px;padding:4px 12px;" type="button">+ Grammar details</button>
+      </div>
+      <div id="grammar-fields" style="display:none;">
+        <div class="form-group">
+          <label>Plural form</label>
+          <input class="form-input" id="new-trans-plural" placeholder="e.g. rakana" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Type (noun, verb, adj, etc.)</label>
+          <input class="form-input" id="new-trans-type" placeholder="e.g. noun" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Feminine form</label>
+          <input class="form-input" id="new-trans-feminine" placeholder="e.g. rakana" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>1st person form</label>
+          <input class="form-input" id="new-trans-first" placeholder="e.g. nrakn" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>3rd person masculine</label>
+          <input class="form-input" id="new-trans-3m" placeholder="" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>3rd person feminine</label>
+          <input class="form-input" id="new-trans-3f" placeholder="" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Followed by</label>
+          <input class="form-input" id="new-trans-followed" placeholder="e.g. noun, adjective" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Preceded by</label>
+          <input class="form-input" id="new-trans-preceded" placeholder="e.g. l- (article)" autocomplete="off">
+        </div>
       </div>
       <div style="display:flex; gap:8px;">
         <button class="btn btn-primary" onclick="addTranslation()">Save to JSON</button>
@@ -605,6 +680,7 @@ const BASE = 'http://localhost:3000';
 let paData = { prompts: [], answers: [] };
 let storyText = '';
 let transData = { en: {}, shat: {} };
+let grammarData = {};
 let storyExpanded = false;
 let modalKey = '';
 let translatorTimer = null;
@@ -623,14 +699,16 @@ async function saveFile(name, content) {
 
 async function init() {
   try {
-    const [paStr, storyStr, transStr] = await Promise.all([
+    const [paStr, storyStr, transStr, gramStr] = await Promise.all([
       loadFile('prompts_answers.json'),
       loadFile('shat_story.txt'),
-      loadFile('translations_shat.json')
+      loadFile('translations_shat.json'),
+      loadFile('grammar_shat.json')
     ]);
     paData = JSON.parse(paStr);
     storyText = storyStr;
     transData = JSON.parse(transStr);
+    grammarData = JSON.parse(gramStr);
     renderAll();
   } catch (e) {
     document.querySelector('.content.active').innerHTML =
@@ -649,6 +727,7 @@ function switchView(id) {
   if (id === 'view-trans') renderTransGrid();
   if (id === 'edit-story') renderStoryEditor();
   if (id === 'edit-trans') renderTransEditor();
+  if (id === 'grammar') renderGrammarTable();
   if (id === 'add-trans') { renderAddTransExisting(); checkPendingWord(); }
 }
 
@@ -657,6 +736,47 @@ function renderAll() {
   renderStoryPreview();
   renderTransGrid();
 }
+
+// ===== GRAMMAR TABLE =====
+function renderGrammarTable() {
+  const tbody = document.getElementById('grammar-tbody');
+  const en = transData.en || {};
+  const q = (document.getElementById('grammar-search')?.value || '').toLowerCase();
+  const entries = Object.entries(en).filter(([w, m]) =>
+    w.toLowerCase().includes(q) || m.toLowerCase().includes(q)
+  );
+  document.getElementById('grammar-count').textContent = `${entries.length} words`;
+
+  tbody.innerHTML = entries.map(([word, meaning]) => {
+    const g = grammarData[word] || {};
+    return `<tr>
+      <td><span class="eng-cell">${escapeHtml(word)}</span></td>
+      <td><span class="shat-cell">${escapeHtml(meaning)}</span></td>
+      <td><input class="grammar-input" data-field="plural" data-word="${escapeHtml(word)}" value="${escapeHtml(g.plural||'')}" placeholder="—"></td>
+      <td><input class="grammar-input" data-field="type" data-word="${escapeHtml(word)}" value="${escapeHtml(g.type||'')}" placeholder="—"></td>
+      <td><input class="grammar-input" data-field="feminine" data-word="${escapeHtml(word)}" value="${escapeHtml(g.feminine||'')}" placeholder="—"></td>
+      <td><input class="grammar-input" data-field="first_person" data-word="${escapeHtml(word)}" value="${escapeHtml(g.first_person||'')}" placeholder="—"></td>
+      <td><input class="grammar-input" data-field="third_person_m" data-word="${escapeHtml(word)}" value="${escapeHtml(g.third_person_m||'')}" placeholder="—"></td>
+      <td><input class="grammar-input" data-field="third_person_f" data-word="${escapeHtml(word)}" value="${escapeHtml(g.third_person_f||'')}" placeholder="—"></td>
+      <td><input class="grammar-input" data-field="followed" data-word="${escapeHtml(word)}" value="${escapeHtml(g.followed||'')}" placeholder="—"></td>
+      <td><input class="grammar-input" data-field="preceded" data-word="${escapeHtml(word)}" value="${escapeHtml(g.preceded||'')}" placeholder="—"></td>
+    </tr>`;
+  }).join('');
+}
+
+let grammarSaveTimer = null;
+document.getElementById('grammar-tbody').addEventListener('change', function(e) {
+  if (e.target.classList.contains('grammar-input')) {
+    const word = e.target.dataset.word;
+    const field = e.target.dataset.field;
+    if (!grammarData[word]) grammarData[word] = {};
+    grammarData[word][field] = e.target.value;
+    clearTimeout(grammarSaveTimer);
+    grammarSaveTimer = setTimeout(() => {
+      saveFile('grammar_shat.json', JSON.stringify(grammarData, null, 2)).catch(() => {});
+    }, 400);
+  }
+});
 
 // ===== SHAT GRAMMAR RULES =====
 const ADJECTIVES = new Set([
@@ -677,7 +797,8 @@ const ADJ_STOP_WORDS = new Set([
   'v','mn','le','3la','3an','m3a','b-','fi',
   'ane','nte','howe','hiye','n7ne','houme',
   'li','lak','lne','lhoum','dyel','d-',
-  'u','wa','we','bas','y9ir','ebde','eheh','ewe'
+  'u','wa','we','bas','y9ir','ebde','eheh','ewe',
+  '?','.',',','!',';',':'
 ]);
 
 const SUN_LETTERS = ['ch','s','r','t','8','n','p','w','2','d','f','j'];
@@ -740,6 +861,73 @@ function doTranslate() {
       tokens[i - 1] = tmp;
     }
   }
+
+  // Rule: "you" + "guys" → "ntome" + "guys"
+  for (let i = 0; i < tokens.length; i++) {
+    const w = tokens[i].replace(/\s+$/, '').toLowerCase().replace(/[.,!?;:()"'"]/g, '');
+    if (w === 'you') {
+      const nxt = i + 1 < tokens.length ? tokens[i + 1].replace(/\s+$/, '').toLowerCase().replace(/[.,!?;:()"'"]/g, '') : '';
+      const prv = i > 0 ? tokens[i - 1].replace(/\s+$/, '').toLowerCase().replace(/[.,!?;:()"'"]/g, '') : '';
+      if (nxt === 'guys' || prv === 'guys') {
+        const sp = tokens[i].match(/\s*$/)[0] || ' ';
+        tokens[i] = 'ntome' + sp;
+      }
+    }
+  }
+
+  // Rule: "is"/"are" → removal + optional "?" at clause end
+  const isAreIdx = new Set();
+  const qAfterIdx = new Set(); // insert "?" after this token index
+  const qBeforeIdx = new Set(); // insert "?" before this token index
+  for (let i = 0; i < tokens.length; i++) {
+    const w = tokens[i].replace(/\s+$/, '').toLowerCase().replace(/[.,!?;:()"'"]/g, '');
+    if (w !== 'is' && w !== 'are') continue;
+    isAreIdx.add(i);
+    const prevEnd = i > 0 ? tokens[i - 1].replace(/\s+$/, '').slice(-1) : '';
+    const atStart = i === 0 || '.?!'.includes(prevEnd);
+    if (!atStart) continue;
+    let found = false;
+    for (let j = i + 1; j < Math.min(i + 5, tokens.length); j++) {
+      if (isAreIdx.has(j)) continue;
+      const t = tokens[j].replace(/\s+$/, '');
+      if (t.includes('?')) { found = true; break; }
+      if (t.endsWith('.') || t.endsWith(',')) {
+        qBeforeIdx.add(j);
+        found = true;
+        break;
+      }
+    }
+    if (found) continue;
+    let cnt = 0;
+    let pos = i + 1;
+    while (pos < tokens.length && cnt < 4) {
+      if (!isAreIdx.has(pos)) cnt++;
+      if (cnt < 4) pos++;
+    }
+    if (pos > i) {
+      let hasQ = false;
+      for (let j = i + 1; j < pos && j < tokens.length; j++) {
+        if (tokens[j].replace(/\s+$/, '').includes('?')) { hasQ = true; break; }
+      }
+      if (!hasQ) qAfterIdx.add(Math.min(pos, tokens.length - 1));
+    }
+  }
+  // Build new tokens
+  const newTokens = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (isAreIdx.has(i)) continue;
+    if (qBeforeIdx.has(i)) {
+      const sp = tokens[i].match(/^\s*/)[0] || '';
+      newTokens.push('?' + (sp || ' '));
+    }
+    newTokens.push(tokens[i]);
+    if (qAfterIdx.has(i)) {
+      const sp = tokens[i].match(/\s*$/)[0] || ' ';
+      newTokens.push('?' + sp);
+    }
+  }
+  tokens.length = 0;
+  tokens.push(...newTokens);
 
   const result = [];
   const missing = new Set();
@@ -1135,6 +1323,19 @@ function renderAddTransExisting() {
     : '<p style="color:#8b949e;">No translations yet.</p>';
 }
 
+function toggleGrammarFields() {
+  const el = document.getElementById('grammar-fields');
+  el.style.display = el.style.display === 'none' ? '' : 'none';
+  document.getElementById('new-trans-plural').value = '';
+  document.getElementById('new-trans-type').value = '';
+  document.getElementById('new-trans-feminine').value = '';
+  document.getElementById('new-trans-first').value = '';
+  document.getElementById('new-trans-3m').value = '';
+  document.getElementById('new-trans-3f').value = '';
+  document.getElementById('new-trans-followed').value = '';
+  document.getElementById('new-trans-preceded').value = '';
+}
+
 async function addTranslation() {
   const word = document.getElementById('new-trans-word').value.trim().toLowerCase();
   const meaning = document.getElementById('new-trans-meaning').value.trim().toLowerCase();
@@ -1145,12 +1346,44 @@ async function addTranslation() {
   transData.en[word] = meaning;
   transData.shat[meaning] = word;
 
-  const out = JSON.stringify(transData, null, 2);
+  // save grammar data if any fields filled
+  const plural = document.getElementById('new-trans-plural').value.trim().toLowerCase();
+  const type = document.getElementById('new-trans-type').value.trim().toLowerCase();
+  const feminine = document.getElementById('new-trans-feminine').value.trim().toLowerCase();
+  const first = document.getElementById('new-trans-first').value.trim().toLowerCase();
+  const thirdM = document.getElementById('new-trans-3m').value.trim().toLowerCase();
+  const thirdF = document.getElementById('new-trans-3f').value.trim().toLowerCase();
+  const followed = document.getElementById('new-trans-followed').value.trim().toLowerCase();
+  const preceded = document.getElementById('new-trans-preceded').value.trim().toLowerCase();
+  if (plural||type||feminine||first||thirdM||thirdF||followed||preceded) {
+    if (!grammarData[word]) grammarData[word] = {};
+    if (plural) grammarData[word].plural = plural;
+    if (type) grammarData[word].type = type;
+    if (feminine) grammarData[word].feminine = feminine;
+    if (first) grammarData[word].first_person = first;
+    if (thirdM) grammarData[word].third_person_m = thirdM;
+    if (thirdF) grammarData[word].third_person_f = thirdF;
+    if (followed) grammarData[word].followed = followed;
+    if (preceded) grammarData[word].preceded = preceded;
+  }
+
   status.textContent = 'Saving...';
   try {
-    await saveFile('translations_shat.json', out);
+    await saveFile('translations_shat.json', JSON.stringify(transData, null, 2));
+    if (plural||type||feminine||first||thirdM||thirdF||followed||preceded) {
+      await saveFile('grammar_shat.json', JSON.stringify(grammarData, null, 2));
+    }
     document.getElementById('new-trans-word').value = '';
     document.getElementById('new-trans-meaning').value = '';
+    document.getElementById('new-trans-plural').value = '';
+    document.getElementById('new-trans-type').value = '';
+    document.getElementById('new-trans-feminine').value = '';
+    document.getElementById('new-trans-first').value = '';
+    document.getElementById('new-trans-3m').value = '';
+    document.getElementById('new-trans-3f').value = '';
+    document.getElementById('new-trans-followed').value = '';
+    document.getElementById('new-trans-preceded').value = '';
+    document.getElementById('grammar-fields').style.display = 'none';
     status.textContent = '\u2713 Saved!';
     renderTransGrid();
     renderTransEditor();
