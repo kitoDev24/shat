@@ -194,7 +194,9 @@
     "type": "pronoun"
   },
   "you": {
-    "type": "pronoun"
+    "type": "pronoun",
+    "third_person_m": "nte",
+    "third_person_f": "nti"
   },
   "he": {
     "type": "pronoun"
@@ -270,7 +272,7 @@
     "type": "verb",
     "first_person": "3andi",
     "third_person_m": "3andu",
-    "third_person_f": "3andha"
+    "third_person_f": "3andhe"
   },
   "do": {
     "type": "verb",
@@ -309,9 +311,9 @@
   },
   "wait": {
     "type": "verb",
-    "first_person": "n7ana",
-    "third_person_m": "y7ana",
-    "third_person_f": "t7ana",
+    "first_person": "n7ani",
+    "third_person_m": "y7ani",
+    "third_person_f": "t7ani",
     "followed": "noun, pronoun"
   },
   "exercise": {
@@ -1334,5 +1336,70 @@
   },
   "stuff": {
     "type": "noun"
+  },
+  "thats funny": {
+    "third_person_f": "4ik t8a7ak",
+    "type": "phrase"
+  },
+  "take care": {
+    "first_person": "nntebeh",
+    "third_person_m": "ntebeh",
+    "third_person_f": "ntebhi"
+  },
+  "have a good day": {
+    "third_person_f": "tjbri yom zein"
+  },
+  "i woke up": {
+    "first_person": "w3ayt",
+    "third_person_m": "w3a",
+    "third_person_f": "w3at"
+  },
+  "go to sleep": {
+    "first_person": "nmchi nrged",
+    "third_person_m": "nchi rged",
+    "third_person_f": "mchi rgdi"
+  },
+  "wake up": {
+    "first_person": "naw3a",
+    "third_person_m": "w3a",
+    "third_person_f": "w3ay"
+  },
+  "brush my teeth": {
+    "third_person_m": "ysewek senneh",
+    "third_person_f": "tsewek senneyhe"
+  },
+  "take a shower": {
+    "first_person": "nssa7am",
+    "third_person_m": "yssa7am",
+    "third_person_f": "tssa7am"
+  },
+  "eat breakfast": {
+    "first_person": "ns6ba7",
+    "third_person_m": "ys6ba7",
+    "third_person_f": "ts6ba7"
+  },
+  "eat lunch": {
+    "first_person": "newkel le9de",
+    "third_person_m": "yewkel le9de",
+    "third_person_f": "towkel le9de"
+  },
+  "eat dinner": {
+    "third_person_f": "ewkli le3che"
+  },
+  "go to work": {
+    "first_person": "nmchi chor cha9le",
+    "third_person_m": "mchi chor cha9le",
+    "third_person_f": "tmchi chor cha9le"
+  },
+  "come home": {
+    "third_person_f": "whay jaye ldar"
+  },
+  "train": {
+    "plural": "derbu",
+    "type": "verb",
+    "feminine": "derbt",
+    "first_person": "derebt",
+    "third_person_m": "darab",
+    "third_person_f": "darrbet"
   }
 }
