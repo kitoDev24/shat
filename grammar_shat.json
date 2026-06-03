@@ -1,0 +1,1338 @@
+{
+  "hello": {
+    "type": "interjection"
+  },
+  "water": {
+    "type": "noun",
+    "plural": "meyat",
+    "preceded": "l- (article), verb"
+  },
+  "fire": {
+    "type": "noun"
+  },
+  "earth": {
+    "type": "noun"
+  },
+  "wind": {
+    "type": "noun"
+  },
+  "light": {
+    "type": "noun"
+  },
+  "dark": {
+    "type": "noun"
+  },
+  "love": {
+    "type": "verb",
+    "first_person": "nb9i",
+    "third_person_m": "yb9i",
+    "third_person_f": "tb9i",
+    "followed": "noun, pronoun"
+  },
+  "war": {
+    "type": "noun"
+  },
+  "peace": {
+    "type": "noun"
+  },
+  "star": {
+    "type": "noun",
+    "plural": "noujoum"
+  },
+  "moon": {
+    "type": "noun",
+    "plural": "9amar"
+  },
+  "sun": {
+    "type": "noun",
+    "plural": "chmous"
+  },
+  "dream": {
+    "type": "noun",
+    "plural": "7lam"
+  },
+  "time": {
+    "type": "noun",
+    "plural": "aw9at"
+  },
+  "in": {
+    "type": "preposition"
+  },
+  "friend": {
+    "type": "noun",
+    "plural": "s7ab",
+    "preceded": "possessive pronoun, article"
+  },
+  "door": {
+    "type": "noun",
+    "plural": "biban"
+  },
+  "house": {
+    "type": "noun",
+    "plural": "dyour"
+  },
+  "impossible": {
+    "type": "adj"
+  },
+  "hi": {
+    "type": "interjection"
+  },
+  "hey": {
+    "type": "interjection"
+  },
+  "goodbye": {
+    "type": "interjection"
+  },
+  "bye": {
+    "type": "interjection"
+  },
+  "thanks": {
+    "type": "interjection"
+  },
+  "thank you": {
+    "type": "interjection"
+  },
+  "welcome": {
+    "type": "interjection"
+  },
+  "sorry": {
+    "type": "interjection"
+  },
+  "please": {
+    "type": "interjection"
+  },
+  "excuse me": {
+    "type": "interjection"
+  },
+  "what": {
+    "type": "question"
+  },
+  "where": {
+    "type": "question"
+  },
+  "when": {
+    "type": "question"
+  },
+  "why": {
+    "type": "question"
+  },
+  "how": {
+    "type": "question"
+  },
+  "who": {
+    "type": "question"
+  },
+  "which": {
+    "type": "question"
+  },
+  "lol": {
+    "type": "interjection"
+  },
+  "lmao": {
+    "type": "interjection"
+  },
+  "omg": {
+    "type": "interjection"
+  },
+  "idk": {
+    "type": "interjection"
+  },
+  "btw": {
+    "type": "interjection"
+  },
+  "tbh": {
+    "type": "interjection"
+  },
+  "afk": {
+    "type": "interjection"
+  },
+  "brb": {
+    "type": "interjection"
+  },
+  "gtg": {
+    "type": "interjection"
+  },
+  "ty": {
+    "type": "interjection"
+  },
+  "nvm": {
+    "type": "interjection"
+  },
+  "yes": {
+    "type": "interjection"
+  },
+  "no": {
+    "type": "interjection"
+  },
+  "maybe": {
+    "type": "interjection"
+  },
+  "ok": {
+    "type": "interjection"
+  },
+  "nice": {
+    "type": "adj",
+    "feminine": "se bien",
+    "preceded": "noun, pronoun"
+  },
+  "hmm": {
+    "type": "interjection"
+  },
+  "oops": {
+    "type": "interjection"
+  },
+  "damn": {
+    "type": "interjection"
+  },
+  "really": {
+    "type": "interjection"
+  },
+  "never": {
+    "type": "adverb"
+  },
+  "me": {
+    "type": "pronoun"
+  },
+  "you": {
+    "type": "pronoun"
+  },
+  "he": {
+    "type": "pronoun"
+  },
+  "she": {
+    "type": "pronoun"
+  },
+  "we": {
+    "type": "pronoun"
+  },
+  "they": {
+    "type": "pronoun"
+  },
+  "my": {
+    "type": "pronoun"
+  },
+  "your": {
+    "type": "pronoun"
+  },
+  "our": {
+    "type": "pronoun"
+  },
+  "their": {
+    "type": "pronoun"
+  },
+  "go": {
+    "type": "verb",
+    "first_person": "nmchi",
+    "third_person_m": "ymchi",
+    "third_person_f": "tmchi",
+    "followed": "noun, pronoun"
+  },
+  "come": {
+    "type": "verb",
+    "first_person": "nji",
+    "third_person_m": "yji",
+    "third_person_f": "tji",
+    "followed": "noun, pronoun"
+  },
+  "see": {
+    "type": "verb",
+    "first_person": "nchov",
+    "third_person_m": "ychov",
+    "third_person_f": "tchov",
+    "followed": "noun, pronoun"
+  },
+  "know": {
+    "type": "verb",
+    "first_person": "n3rav",
+    "third_person_m": "ya3rav",
+    "third_person_f": "ta3rav",
+    "followed": "noun, pronoun"
+  },
+  "think": {
+    "type": "verb",
+    "first_person": "nvakar",
+    "third_person_m": "yvakar",
+    "third_person_f": "tvakar",
+    "followed": "noun, pronoun"
+  },
+  "want": {
+    "type": "verb",
+    "first_person": "ndor",
+    "third_person_m": "ydor",
+    "third_person_f": "tdor",
+    "followed": "noun, pronoun"
+  },
+  "need": {
+    "type": "verb",
+    "followed": "noun, pronoun"
+  },
+  "have": {
+    "type": "verb",
+    "first_person": "3andi",
+    "third_person_m": "3andu",
+    "third_person_f": "3andha"
+  },
+  "do": {
+    "type": "verb",
+    "first_person": "n3adel",
+    "third_person_m": "y3adel",
+    "third_person_f": "t3adel",
+    "followed": "noun, pronoun"
+  },
+  "make": {
+    "type": "verb",
+    "first_person": "nsna3",
+    "third_person_m": "ysna3",
+    "third_person_f": "tsna3",
+    "followed": "noun, pronoun"
+  },
+  "say": {
+    "type": "verb",
+    "first_person": "ngoul",
+    "third_person_m": "ygoul",
+    "third_person_f": "tgoul",
+    "followed": "noun, pronoun"
+  },
+  "ask": {
+    "type": "verb",
+    "first_person": "nsewel",
+    "third_person_m": "ysewel",
+    "third_person_f": "tsewel",
+    "followed": "noun, pronoun"
+  },
+  "help": {
+    "type": "verb",
+    "first_person": "n3awen",
+    "third_person_m": "y3awen",
+    "third_person_f": "t3awen",
+    "followed": "noun, pronoun"
+  },
+  "wait": {
+    "type": "verb",
+    "first_person": "n7ana",
+    "third_person_m": "y7ana",
+    "third_person_f": "t7ana",
+    "followed": "noun, pronoun"
+  },
+  "exercise": {
+    "type": "verb",
+    "first_person": "ntemrin",
+    "third_person_m": "ytemrin",
+    "third_person_f": "ttemrin",
+    "followed": "noun, pronoun"
+  },
+  "closed": {
+    "type": "adj",
+    "feminine": "megfoula"
+  },
+  "chef": {
+    "type": "noun"
+  },
+  "passport": {
+    "type": "noun"
+  },
+  "office": {
+    "type": "noun"
+  },
+  "boss": {
+    "type": "noun"
+  },
+  "colleague": {
+    "type": "noun"
+  },
+  "project": {
+    "type": "noun",
+    "plural": "mechari3"
+  },
+  "report": {
+    "type": "noun"
+  },
+  "schedule": {
+    "type": "noun"
+  },
+  "salary": {
+    "type": "noun"
+  },
+  "password": {
+    "type": "noun"
+  },
+  "charger": {
+    "type": "noun"
+  },
+  "download": {
+    "type": "verb",
+    "first_person": "ntenzi",
+    "third_person_m": "ytenzil",
+    "third_person_f": "ttenzil"
+  },
+  "upload": {
+    "type": "verb",
+    "first_person": "nrav3",
+    "third_person_m": "yrav3",
+    "third_person_f": "trav3"
+  },
+  "screen": {
+    "type": "noun"
+  },
+  "mouse": {
+    "type": "noun"
+  },
+  "website": {
+    "type": "noun"
+  },
+  "app": {
+    "type": "noun"
+  },
+  "username": {
+    "type": "noun"
+  },
+  "login": {
+    "type": "verb"
+  },
+  "logout": {
+    "type": "verb"
+  },
+  "mother": {
+    "type": "noun",
+    "plural": "waldat",
+    "preceded": "possessive pronoun, article"
+  },
+  "father": {
+    "type": "noun",
+    "plural": "walidin",
+    "preceded": "possessive pronoun, article"
+  },
+  "brother": {
+    "type": "noun",
+    "plural": "5out",
+    "preceded": "possessive pronoun, article"
+  },
+  "sister": {
+    "type": "noun",
+    "plural": "5ewat",
+    "preceded": "possessive pronoun, article"
+  },
+  "son": {
+    "type": "noun",
+    "plural": "wlad",
+    "preceded": "possessive pronoun, article"
+  },
+  "daughter": {
+    "type": "noun",
+    "plural": "bnet",
+    "preceded": "possessive pronoun, article"
+  },
+  "husband": {
+    "type": "noun",
+    "plural": "zwaj",
+    "preceded": "possessive pronoun, article"
+  },
+  "wife": {
+    "type": "noun",
+    "plural": "3yalat",
+    "preceded": "possessive pronoun, article"
+  },
+  "uncle": {
+    "type": "noun",
+    "plural": "3moum",
+    "preceded": "possessive pronoun, article"
+  },
+  "aunt": {
+    "type": "noun",
+    "plural": "3ammat",
+    "preceded": "possessive pronoun, article"
+  },
+  "cousin": {
+    "type": "noun",
+    "plural": "9ouraba2",
+    "preceded": "possessive pronoun, article"
+  },
+  "grandfather": {
+    "type": "noun",
+    "plural": "jdoud"
+  },
+  "grandmother": {
+    "type": "noun",
+    "plural": "jdat"
+  },
+  "children": {
+    "type": "noun",
+    "plural": "terke"
+  },
+  "parents": {
+    "type": "noun",
+    "plural": "ehl"
+  },
+  "family": {
+    "type": "noun",
+    "plural": "3a2ilat",
+    "preceded": "possessive pronoun, article"
+  },
+  "neighbors": {
+    "type": "noun"
+  },
+  "wedding": {
+    "type": "noun"
+  },
+  "invitation": {
+    "type": "noun"
+  },
+  "study": {
+    "type": "verb",
+    "first_person": "ngra",
+    "third_person_m": "ygra",
+    "third_person_f": "tgra",
+    "followed": "noun, pronoun"
+  },
+  "exam": {
+    "plural": "imti7anat"
+  },
+  "teacher": {
+    "plural": "mu3alimin"
+  },
+  "lesson": {
+    "plural": "drouss"
+  },
+  "accident": {
+    "type": "noun"
+  },
+  "hospital": {
+    "type": "noun",
+    "plural": "mustachfayat"
+  },
+  "pharmacy": {
+    "type": "noun",
+    "plural": "saydaliyat"
+  },
+  "danger": {
+    "type": "noun"
+  },
+  "other": {
+    "type": "adj"
+  },
+  "planet": {
+    "type": "noun"
+  },
+  "orbit": {
+    "type": "noun"
+  },
+  "gravity": {
+    "type": "noun"
+  },
+  "i": {
+    "type": "pronoun"
+  },
+  "after": {
+    "type": "preposition"
+  },
+  "fine": {
+    "type": "adj",
+    "feminine": "b5ir",
+    "preceded": "noun, pronoun"
+  },
+  "gave": {
+    "type": "verb",
+    "first_person": "36it",
+    "third_person_m": "36a",
+    "third_person_f": "36at"
+  },
+  "said": {
+    "type": "verb",
+    "first_person": "golt",
+    "third_person_m": "gal",
+    "third_person_f": "galet"
+  },
+  "ate": {
+    "type": "verb",
+    "first_person": "klet",
+    "third_person_m": "kal",
+    "third_person_f": "kalet"
+  },
+  "was": {
+    "type": "verb",
+    "first_person": "kont",
+    "third_person_m": "kan",
+    "third_person_f": "kanet"
+  },
+  "came": {
+    "type": "verb",
+    "first_person": "jiti",
+    "third_person_m": "ja",
+    "third_person_f": "jat"
+  },
+  "went": {
+    "type": "verb",
+    "first_person": "mchit",
+    "third_person_m": "mcha",
+    "third_person_f": "mchat"
+  },
+  "about": {
+    "type": "preposition"
+  },
+  "sky": {
+    "type": "noun"
+  },
+  "book": {
+    "type": "noun",
+    "plural": "ktoub"
+  },
+  "happy": {
+    "type": "adj",
+    "feminine": "sa3da",
+    "preceded": "noun, pronoun"
+  },
+  "morning": {
+    "type": "noun"
+  },
+  "school": {
+    "type": "noun"
+  },
+  "cloths": {
+    "plural": "ellbass"
+  },
+  "pillow": {
+    "plural": "wsadayat"
+  },
+  "way": {
+    "type": "noun"
+  },
+  "by": {
+    "type": "preposition"
+  },
+  "good": {
+    "type": "adj",
+    "feminine": "zeine",
+    "preceded": "noun, pronoun"
+  },
+  "to": {
+    "type": "preposition"
+  },
+  "ugly": {
+    "type": "adj",
+    "feminine": "chwine",
+    "preceded": "noun, pronoun"
+  },
+  "kill": {
+    "type": "verb",
+    "first_person": "nktl",
+    "third_person_m": "yktl",
+    "third_person_f": "tktl",
+    "followed": "noun, pronoun"
+  },
+  "problem": {
+    "type": "noun",
+    "plural": "mchakil"
+  },
+  "phone": {
+    "type": "noun",
+    "plural": "tlefunat"
+  },
+  "bad": {
+    "type": "adj",
+    "feminine": "5amra",
+    "preceded": "noun, pronoun"
+  },
+  "cat": {
+    "type": "noun",
+    "plural": "mchacha"
+  },
+  "cute": {
+    "type": "adj",
+    "feminine": "zweine",
+    "preceded": "noun, pronoun"
+  },
+  "cut": {
+    "type": "verb",
+    "first_person": "ng6a3",
+    "third_person_m": "yg6a3",
+    "third_person_f": "tg6a3",
+    "followed": "noun, pronoun"
+  },
+  "bread": {
+    "type": "noun",
+    "plural": "mbourou",
+    "preceded": "l- (article), verb"
+  },
+  "butter": {
+    "type": "noun",
+    "preceded": "l- (article), verb"
+  },
+  "chocolate": {
+    "type": "noun",
+    "preceded": "l- (article), verb"
+  },
+  "at": {
+    "type": "preposition"
+  },
+  "football": {
+    "type": "noun"
+  },
+  "beach": {
+    "type": "noun"
+  },
+  "sea": {
+    "type": "noun",
+    "plural": "b7our"
+  },
+  "game": {
+    "type": "noun",
+    "plural": "el3ab"
+  },
+  "finally": {
+    "type": "interjection"
+  },
+  "won": {
+    "type": "verb",
+    "first_person": "vzt",
+    "third_person_m": "vaz",
+    "third_person_f": "vazet"
+  },
+  "verry": {
+    "type": "adj"
+  },
+  "handsome": {
+    "type": "adj",
+    "feminine": "bogosse",
+    "preceded": "noun, pronoun"
+  },
+  "day": {
+    "type": "noun",
+    "plural": "eyam"
+  },
+  "days": {
+    "type": "noun",
+    "plural": "eyam"
+  },
+  "academies": {
+    "type": "noun"
+  },
+  "build": {
+    "type": "verb",
+    "first_person": "nbni",
+    "third_person_m": "ybni",
+    "third_person_f": "tbni",
+    "followed": "noun, pronoun"
+  },
+  "activities": {
+    "type": "noun"
+  },
+  "administration": {
+    "type": "noun"
+  },
+  "sciences": {
+    "type": "noun"
+  },
+  "worked": {
+    "type": "verb",
+    "first_person": "cht9alt",
+    "third_person_m": "cht9al",
+    "third_person_f": "cht9alet"
+  },
+  "research": {
+    "type": "noun"
+  },
+  "projects": {
+    "type": "noun"
+  },
+  "physical": {
+    "type": "adj"
+  },
+  "life": {
+    "type": "noun"
+  },
+  "master": {
+    "type": "noun"
+  },
+  "technical": {
+    "type": "adj"
+  },
+  "force": {
+    "type": "noun"
+  },
+  "greenbelt": {
+    "type": "noun"
+  },
+  "born": {
+    "type": "verb"
+  },
+  "and": {
+    "type": "adverb"
+  },
+  "president": {
+    "type": "noun"
+  },
+  "presidency": {
+    "type": "noun"
+  },
+  "mission": {
+    "type": "noun"
+  },
+  "congress": {
+    "type": "noun"
+  },
+  "board": {
+    "type": "noun"
+  },
+  "air": {
+    "type": "noun"
+  },
+  "award": {
+    "type": "noun"
+  },
+  "center": {
+    "type": "noun"
+  },
+  "secret": {
+    "type": "noun"
+  },
+  "also": {
+    "type": "adverb"
+  },
+  "from": {
+    "type": "preposition"
+  },
+  "encyclopedia": {
+    "type": "noun"
+  },
+  "free": {
+    "type": "adj",
+    "feminine": "cadou",
+    "preceded": "noun, pronoun"
+  },
+  "portrait": {
+    "type": "noun"
+  },
+  "space": {
+    "type": "noun"
+  },
+  "for": {
+    "type": "preposition"
+  },
+  "of": {
+    "type": "preposition"
+  },
+  "preceded": {
+    "type": "verb",
+    "third_person_m": "sba9"
+  },
+  "succeeded": {
+    "type": "verb",
+    "third_person_m": "nja7"
+  },
+  "director": {
+    "type": "noun"
+  },
+  "assistant": {
+    "type": "noun"
+  },
+  "flight": {
+    "type": "noun"
+  },
+  "state": {
+    "type": "noun"
+  },
+  "died": {
+    "type": "verb",
+    "first_person": "mtt",
+    "third_person_m": "mat",
+    "third_person_f": "matet"
+  },
+  "education": {
+    "type": "noun"
+  },
+  "secretary": {
+    "type": "noun"
+  },
+  "technology": {
+    "type": "noun"
+  },
+  "details": {
+    "type": "noun"
+  },
+  "personal": {
+    "type": "adj"
+  },
+  "city": {
+    "type": "noun",
+    "plural": "mdayen"
+  },
+  "place": {
+    "type": "noun",
+    "plural": "blayss"
+  },
+  "above": {
+    "type": "preposition"
+  },
+  "already": {
+    "type": "adverb"
+  },
+  "but": {
+    "type": "adverb"
+  },
+  "empty": {
+    "type": "adj",
+    "feminine": "var9a",
+    "preceded": "noun, pronoun"
+  },
+  "entered": {
+    "type": "verb",
+    "first_person": "d5alt",
+    "third_person_m": "d5al"
+  },
+  "flickered": {
+    "type": "verb",
+    "third_person_m": "rjev"
+  },
+  "footsteps": {
+    "type": "noun",
+    "plural": "wa6yat"
+  },
+  "him": {
+    "type": "pronoun"
+  },
+  "lights": {
+    "type": "noun",
+    "plural": "2a8waw"
+  },
+  "whispered": {
+    "type": "verb",
+    "third_person_m": "temtem"
+  },
+  "with": {
+    "type": "preposition"
+  },
+  "suddenly": {
+    "type": "interjection"
+  },
+  "speaking": {
+    "type": "verb",
+    "third_person_m": "ykelam"
+  },
+  "moving": {
+    "type": "verb"
+  },
+  "voice": {
+    "type": "noun"
+  },
+  "rang": {
+    "type": "verb",
+    "third_person_m": "sowneat"
+  },
+  "table": {
+    "type": "noun",
+    "plural": "6awla"
+  },
+  "on": {
+    "type": "preposition"
+  },
+  "humans": {
+    "type": "noun",
+    "plural": "lbchr"
+  },
+  "sunset": {
+    "type": "noun"
+  },
+  "last": {
+    "type": "adj"
+  },
+  "silence": {
+    "type": "noun"
+  },
+  "slowly": {
+    "type": "interjection"
+  },
+  "still": {
+    "type": "adverb"
+  },
+  "waited": {
+    "type": "verb",
+    "first_person": "7anet",
+    "third_person_m": "7ane",
+    "third_person_f": "7anet"
+  },
+  "battery": {
+    "type": "noun",
+    "plural": "batriyat"
+  },
+  "dying": {
+    "type": "verb",
+    "third_person_m": "ymout"
+  },
+  "centuries": {
+    "type": "noun",
+    "plural": "9ouroun"
+  },
+  "tail": {
+    "type": "noun",
+    "plural": "nouwache"
+  },
+  "robot": {
+    "type": "noun"
+  },
+  "man": {
+    "type": "noun",
+    "plural": "rjoul"
+  },
+  "stared": {
+    "type": "verb",
+    "third_person_m": "y5zr"
+  },
+  "as": {
+    "type": "preposition"
+  },
+  "easy": {
+    "type": "adj",
+    "feminine": "besi6a",
+    "preceded": "noun, pronoun"
+  },
+  "important": {
+    "type": "adj",
+    "feminine": "mouhime",
+    "preceded": "noun, pronoun"
+  },
+  "money": {
+    "type": "noun",
+    "plural": "va8a",
+    "preceded": "l- (article), verb"
+  },
+  "so": {
+    "type": "adverb"
+  },
+  "give": {
+    "type": "verb",
+    "first_person": "n36i",
+    "third_person_m": "y36i",
+    "third_person_f": "t36i",
+    "followed": "noun, pronoun"
+  },
+  "write": {
+    "type": "verb",
+    "first_person": "nktb",
+    "third_person_m": "yktb",
+    "third_person_f": "tktb",
+    "followed": "noun, pronoun"
+  },
+  "name": {
+    "type": "noun",
+    "plural": "asma2"
+  },
+  "big": {
+    "type": "adj",
+    "feminine": "kbire",
+    "preceded": "noun, pronoun"
+  },
+  "god": {
+    "type": "noun"
+  },
+  "not": {
+    "type": "adverb"
+  },
+  "draw": {
+    "type": "verb",
+    "first_person": "nrsam",
+    "third_person_m": "yrsam",
+    "third_person_f": "trsam",
+    "followed": "noun, pronoun"
+  },
+  "die": {
+    "type": "verb",
+    "first_person": "nmout",
+    "third_person_m": "ymout",
+    "third_person_f": "tmout",
+    "followed": "noun, pronoun"
+  },
+  "limping": {
+    "type": "verb",
+    "third_person_m": "ya3rag"
+  },
+  "mustache": {
+    "type": "noun",
+    "plural": "chareb"
+  },
+  "rain": {
+    "type": "noun",
+    "plural": "s7ab"
+  },
+  "wet": {
+    "type": "adj",
+    "feminine": "mebloula",
+    "preceded": "noun, pronoun"
+  },
+  "face": {
+    "type": "noun",
+    "plural": "wjohe"
+  },
+  "faces": {
+    "type": "noun",
+    "plural": "wjohe"
+  },
+  "rice": {
+    "type": "noun",
+    "preceded": "l- (article), verb"
+  },
+  "fish": {
+    "type": "noun",
+    "plural": "7outan",
+    "preceded": "l- (article), verb"
+  },
+  "prophet": {
+    "type": "noun",
+    "plural": "enbiya2"
+  },
+  "delicious": {
+    "type": "adj",
+    "feminine": "7elwe",
+    "preceded": "noun, pronoun"
+  },
+  "chicken": {
+    "type": "noun",
+    "plural": "diouk",
+    "preceded": "l- (article), verb"
+  },
+  "chickens": {
+    "type": "noun",
+    "plural": "diouk"
+  },
+  "car": {
+    "type": "noun",
+    "plural": "wetat"
+  },
+  "latest": {
+    "type": "adj",
+    "feminine": "a5ra",
+    "preceded": "noun, pronoun"
+  },
+  "best": {
+    "type": "adj",
+    "feminine": "2avdal"
+  },
+  "history": {
+    "type": "noun"
+  },
+  "knows": {
+    "type": "verb",
+    "third_person_m": "ya3rav"
+  },
+  "until": {
+    "type": "preposition"
+  },
+  "self": {
+    "type": "noun"
+  },
+  "wants": {
+    "type": "verb"
+  },
+  "understand": {
+    "type": "verb",
+    "first_person": "nvhem",
+    "third_person_m": "yvhem",
+    "third_person_f": "tvhem",
+    "followed": "noun, pronoun"
+  },
+  "listen": {
+    "type": "verb",
+    "first_person": "nsannet",
+    "third_person_m": "ysannet",
+    "third_person_f": "tsannet",
+    "followed": "noun, pronoun"
+  },
+  "hates": {
+    "type": "verb"
+  },
+  "hate": {
+    "type": "verb",
+    "first_person": "akrah",
+    "third_person_m": "ykrah",
+    "third_person_f": "tkrah",
+    "followed": "noun, pronoun"
+  },
+  "sell": {
+    "type": "verb",
+    "first_person": "nbi3",
+    "third_person_m": "ybi3",
+    "third_person_f": "tbi3",
+    "followed": "noun, pronoun"
+  },
+  "keep": {
+    "type": "verb",
+    "first_person": "ntem",
+    "third_person_m": "ytem",
+    "third_person_f": "ttem",
+    "followed": "noun, pronoun"
+  },
+  "same": {
+    "type": "adj",
+    "preceded": "noun, pronoun"
+  },
+  "status": {
+    "type": "noun"
+  },
+  "change": {
+    "type": "verb",
+    "first_person": "n9ayr",
+    "third_person_m": "yn9ayr",
+    "third_person_f": "tn9ayr",
+    "followed": "noun, pronoun"
+  },
+  "swear": {
+    "type": "verb",
+    "first_person": "n7lev",
+    "third_person_m": "y7lev",
+    "third_person_f": "t7lev",
+    "followed": "noun, pronoun"
+  },
+  "bomb": {
+    "type": "noun"
+  },
+  "months": {
+    "type": "noun",
+    "plural": "chhra"
+  },
+  "faith": {
+    "type": "noun"
+  },
+  "followers": {
+    "type": "noun"
+  },
+  "fell": {
+    "type": "verb",
+    "third_person_m": "6a7"
+  },
+  "converts": {
+    "type": "verb",
+    "third_person_m": "yt7awel"
+  },
+  "death": {
+    "type": "noun"
+  },
+  "confirm": {
+    "type": "verb",
+    "first_person": "nekd",
+    "third_person_m": "ykd",
+    "third_person_f": "tkd",
+    "followed": "noun, pronoun"
+  },
+  "law": {
+    "type": "noun",
+    "plural": "9awanin"
+  },
+  "word": {
+    "type": "noun",
+    "plural": "kelmat"
+  },
+  "years": {
+    "type": "noun",
+    "plural": "senewat"
+  },
+  "founder": {
+    "type": "noun"
+  },
+  "event": {
+    "type": "noun"
+  },
+  "hadith": {
+    "type": "noun"
+  },
+  "political": {
+    "type": "adj"
+  },
+  "according to": {
+    "type": "preposition"
+  },
+  "around": {
+    "type": "preposition"
+  },
+  "before": {
+    "type": "preposition"
+  },
+  "army": {
+    "type": "noun",
+    "plural": "jyouch"
+  },
+  "beginning": {
+    "type": "noun"
+  },
+  "arab": {
+    "type": "adj"
+  },
+  "found": {
+    "type": "verb",
+    "first_person": "njbart",
+    "third_person_m": "njbar"
+  },
+  "gathered": {
+    "type": "verb",
+    "first_person": "7assalt",
+    "third_person_m": "7assalt"
+  },
+  "preach": {
+    "type": "verb",
+    "third_person_m": "ywa38",
+    "followed": "noun, pronoun"
+  },
+  "religious": {
+    "type": "adj"
+  },
+  "military": {
+    "type": "adj"
+  },
+  "nights": {
+    "type": "noun",
+    "plural": "lyaly"
+  },
+  "account": {
+    "type": "noun"
+  },
+  "main": {
+    "type": "adj",
+    "preceded": "noun, pronoun"
+  },
+  "prophets": {
+    "type": "noun"
+  },
+  "received": {
+    "type": "verb",
+    "third_person_m": "tla9a"
+  },
+  "besides": {
+    "type": "preposition"
+  },
+  "arabian": {
+    "type": "adj"
+  },
+  "divinely inspired": {
+    "type": "adj"
+  },
+  "form": {
+    "type": "noun"
+  },
+  "clan": {
+    "type": "noun"
+  },
+  "few": {
+    "type": "adj"
+  },
+  "initially": {
+    "type": "interjection"
+  },
+  "mountain": {
+    "type": "noun",
+    "plural": "kdiyat"
+  },
+  "quran": {
+    "type": "noun"
+  },
+  "number": {
+    "type": "noun",
+    "plural": "ar9am"
+  },
+  "under": {
+    "type": "preposition"
+  },
+  "gay": {
+    "type": "adj"
+  },
+  "stuff": {
+    "type": "noun"
+  }
+}
